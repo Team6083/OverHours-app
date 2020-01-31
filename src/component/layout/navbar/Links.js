@@ -7,7 +7,7 @@ const Links = (props) => {
     const { links, navOnlyLinks } = props;
 
     let allLinks = [];
-    allLinks.join(links);
+    allLinks.push(...links);
 
     navOnlyLinks.forEach((element) => {
         const { prefix, routes } = element;
@@ -26,7 +26,7 @@ const Links = (props) => {
         const renderLink = () => {
             return (
                 <Nav.Item key={i}>
-                    <Nav.Link className="nav-link" to={path}>{name}</Nav.Link>
+                    <NavLink className="nav-link" to={path}>{name}</NavLink>
                 </Nav.Item>
             )
         }
@@ -61,10 +61,11 @@ const Links = (props) => {
                 {
                     userLogined ?
                         <div id="userBar">
-                            <NavLink to="/auth/roles">
-                                <NB.Text className="text-dark mr-2">
-                                    {getName()}
-                                </NB.Text>
+
+                            <NB.Text className="text-dark mr-2">
+                                {getName()}
+                            </NB.Text>
+                            <NavLink to="/users/edit">
                                 <span className="badge badge-success">
                                     Edit profile
                                     </span>

@@ -8,10 +8,10 @@ export class NavBar extends Component {
 
     render() {
         return (
-            <NB bg="white" fixed="top" light expand="lg">
+            <NB bg="white" fixed="top" expand="lg">
                 <NB.Brand>
                     <Link to='/' className="text-dark">
-                        <span className="navbar-brand" style={{ fontWeight: "400" }}>OverHours</span>
+                        <span style={{ fontWeight: "400" }}>OverHours</span>
                     </Link>
                 </NB.Brand>
                 <NB.Toggle />
