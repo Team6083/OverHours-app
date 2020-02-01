@@ -234,7 +234,7 @@ function Table(props) {
                 <div className="col-sm-12 col-md-5">
                     <div className="dataTables_info" role="status" aria-live="polite">
                         <span>Showing {(enablePagination ? pageIndex * pageSize : 0) + (rows.length !== 0 ? 1 : 0)} to {enablePagination ? ((pageIndex + 1) * pageSize > rows.length ? rows.length : (pageIndex + 1) * pageSize) : rows.length} of {rows.length} entries</span>
-                        {enableSearch ? <span> (filtered from {data.length} total entries)</span> : null}
+                        {enableSearch && state.globalFilter ? <span> (filtered from {data.length} total entries)</span> : null}
                     </div>
                 </div>
                 <div className="col-sm-12 col-md-7">
