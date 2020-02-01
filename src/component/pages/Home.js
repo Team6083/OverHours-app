@@ -21,6 +21,30 @@ export class Home extends Component {
 
     render() {
 
+        const ds = [
+            {
+                "_id": "5c2f3183c9c9200004b372fe",
+                "userid": "dora",
+                "timein": 1,
+                "timeout": 2,
+                "seasonid": "before-2019-season"
+            },
+            {
+                "_id": "5c2f31c4c9c9200004b372ff",
+                "userid": "xiao_guai",
+                "timein": 2,
+                "timeout": 1,
+                "seasonid": "before-2019-season"
+            },
+            {
+                "_id": "5c2f31d0c9c9200004b37300",
+                "userid": "xiao_guai",
+                "timein": 5,
+                "timeout": -1,
+                "seasonid": "before-2019-season"
+            },
+        ];
+
         return (
             <div className="container-fluid">
                 <div className="row justify-content-md-center">
@@ -62,50 +86,40 @@ export class Home extends Component {
 
                 <div className="row mt-4 justify-content-lg-center">
                     <div className="col-lg-8 col">
-                        <Table columns={[
-                            {
-                                Header: 'user',
-                                accessor: 'userid',
-                                isSortable: true,
-                            },
-                            {
-                                Header: 'time in',
-                                accessor: 'timein',
-                                isSortable: true,
-                            },
-                            {
-                                Header: 'time out',
-                                accessor: 'timeout',
-                                isSortable: true,
-                            },
-                            {
-                                Header: 'season',
-                                accessor: 'seasonid',
-                                isSortable: true,
-                            }
-                        ]} data={[
-                            {
-                                "_id": "5c2f3183c9c9200004b372fe",
-                                "userid": "dora",
-                                "timein": 1,
-                                "timeout": 2,
-                                "seasonid": "before-2019-season"
-                            },
-                            {
-                                "_id": "5c2f31c4c9c9200004b372ff",
-                                "userid": "xiao_guai",
-                                "timein": 2,
-                                "timeout": 1,
-                                "seasonid": "before-2019-season"
-                            },
-                            {
-                                "_id": "5c2f31d0c9c9200004b37300",
-                                "userid": "xiao_guai",
-                                "timein": 5,
-                                "timeout": -1,
-                                "seasonid": "before-2019-season"
-                            }
-                        ]} />
+                        <Table
+                            columns={[
+                                {
+                                    Header: 'user',
+                                    accessor: 'userid',
+                                    isSortable: true,
+                                },
+                                {
+                                    Header: 'time in',
+                                    accessor: 'timein',
+                                    isSortable: true,
+                                },
+                                {
+                                    Header: 'time out',
+                                    accessor: 'timeout',
+                                    isSortable: true,
+                                },
+                                {
+                                    Header: 'season',
+                                    accessor: 'seasonid',
+                                    isSortable: true,
+                                }
+                            ]}
+
+                            data={[]}
+
+                            search={true}
+
+                            sort={{
+                                sortBy: [
+                                    { id: "timein", desc: true }
+                                ]
+                            }}
+                        />
                     </div>
                 </div>
             </div>
