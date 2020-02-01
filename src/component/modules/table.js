@@ -1,5 +1,5 @@
 
-import React, { Fragment } from 'react'
+import React, { } from 'react'
 import { useTable, useSortBy, useGlobalFilter, usePagination } from 'react-table'
 import '../../css/dataTables.bootstrap4.css'
 
@@ -86,69 +86,69 @@ function Table(props) {
     const renderPaginationPages = () => {
         if (pageOptions.length > 7) {
             return (
-                <Fragment>
+                <>
                     {/* first page */}
                     <li className={"paginate_button page-item " + (pageIndex === 0 ? "active " : "")}>
-                        <a href="#" onClick={() => gotoPage(0)} className="page-link">1</a>
+                        <button onClick={() => { gotoPage(0) }} className="page-link">1</button>
                     </li>
 
                     {pageIndex > 3 ?
                         <li className="paginate_button page-item disabled" >
-                            <a href="#" className="page-link">…</a>
+                            <button className="page-link">…</button>
                         </li> :
-                        <Fragment>
+                        <>
                             {
                                 [1, 2, 3, 4].map((k, i) =>
                                     <li key={i} className={"paginate_button page-item " + (pageIndex === k ? "active " : "")}>
-                                        <a href="#" onClick={() => gotoPage(k)} className="page-link">{k + 1}</a>
+                                        <button onClick={() => gotoPage(k)} className="page-link">{k + 1}</button>
                                     </li>
                                 )
                             }
-                        </Fragment>
+                        </>
                     }
 
                     {
                         pageIndex > 3 && pageIndex < pageOptions.length - 4 ?
-                            <Fragment>
+                            <>
                                 <li className={"paginate_button page-item"}>
-                                    <a href="#" onClick={() => gotoPage(pageIndex - 1)} className="page-link">{pageIndex}</a>
+                                    <button onClick={() => gotoPage(pageIndex - 1)} className="page-link">{pageIndex}</button>
                                 </li>
 
                                 <li className={"paginate_button page-item active"}>
-                                    <a href="#" onClick={() => gotoPage(pageIndex)} className="page-link">{pageIndex + 1}</a>
+                                    <button onClick={() => gotoPage(pageIndex)} className="page-link">{pageIndex + 1}</button>
                                 </li>
 
                                 <li className={"paginate_button page-item"}>
-                                    <a href="#" onClick={() => gotoPage(pageIndex + 1)} className="page-link">{pageIndex + 2}</a>
+                                    <button onClick={() => gotoPage(pageIndex + 1)} className="page-link">{pageIndex + 2}</button>
                                 </li>
-                            </Fragment> : null
+                            </> : null
                     }
 
                     {pageIndex < pageOptions.length - 4 ?
                         <li className="paginate_button page-item disabled" >
-                            <a href="#" className="page-link">…</a>
+                            <button className="page-link">…</button>
                         </li> :
-                        <Fragment>
+                        <>
                             {
                                 Array.from({ length: 4 }, (_, i) => pageOptions.length - 5 + i).map((k, i) =>
                                     <li key={i} className={"paginate_button page-item " + (pageIndex === k ? "active " : "")}>
-                                        <a href="#" onClick={() => gotoPage(k)} className="page-link">{k + 1}</a>
+                                        <button onClick={() => gotoPage(k)} className="page-link">{k + 1}</button>
                                     </li>
                                 )
                             }
-                        </Fragment>
+                        </>
                     }
 
                     {/* last page */}
                     <li className={"paginate_button page-item " + (pageIndex === (pageCount - 1) ? "active " : "")}>
-                        <a href="#" onClick={() => gotoPage(pageCount - 1)} className="page-link">{pageCount}</a>
+                        <button onClick={() => gotoPage(pageCount - 1)} className="page-link">{pageCount}</button>
                     </li>
-                </Fragment>
+                </>
             )
         } else {
             return [...pageOptions].map((_, i) => {
                 return <li key={i} className={"paginate_button page-item " + (pageIndex === i ? "active " : "")}>
-                    <a href="#" onClick={() => gotoPage(i)} className="page-link">{i + 1}</a>
+                    <button onClick={() => { gotoPage(i) }} className="page-link">{i + 1}</button>
                 </li>
             });
         }
@@ -223,7 +223,7 @@ function Table(props) {
                                 }
                             ) :
                                 <tr className="odd">
-                                    <td colspan={columns.length} className="dataTables_empty" valign="top">{text.empty || "No matching records found"}</td>
+                                    <td colSpan={columns.length} className="dataTables_empty" valign="top">{text.empty || "No matching records found"}</td>
                                 </tr>
                             }
                         </tbody>
@@ -242,11 +242,11 @@ function Table(props) {
                         enablePagination ? <div className="dataTables_paginate paging_simple_numbers">
                             <ul className="pagination">
                                 <li className={"paginate_button page-item previous " + (canPreviousPage ? "" : "disabled ")}>
-                                    <a href="#" className="page-link" onClick={() => previousPage()}>Previous</a>
+                                    <button className="page-link" onClick={() => previousPage()}>Previous</button>
                                 </li>
                                 {renderPaginationPages()}
                                 <li className={"paginate_button page-item next " + (canNextPage ? "" : "disabled ")}>
-                                    <a href="#" onClick={() => nextPage()} className="page-link">Next</a>
+                                    <button onClick={() => nextPage()} className="page-link">Next</button>
                                 </li>
                             </ul>
                         </div> : null
