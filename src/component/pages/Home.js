@@ -6,11 +6,44 @@ export class Home extends Component {
     state = {
         checkinInput: "",
         allUsers: [],
-        usersMap: {}
+        usersMap: {},
+        timeLogs: []
     }
 
-    handleCheckinOnClick(e) {
+    componentDidMount = () => {
+        this.refreshTimeLogs();
+    }
 
+    refreshTimeLogs = () => {
+        fetch("http://localhost/timeLog/unfinished")
+            .then((r) => r.json())
+            .then((res) => {
+                if (res) {
+                    this.setState({
+                        timeLogs: res
+                    });
+                }
+            });
+    }
+
+    handleCheckinSubmit = (e) => {
+        e.preventDefault();
+        fetch("http://localhost/timeLog/checkin?user=" + this.state.checkinInput)
+            .then((r) => {
+                this.refreshTimeLogs();
+                if (Math.floor(r.status / 100) !== 2) {
+
+                }
+            });
+    }
+
+    handleCheckoutOnClick = (e) => {
+        fetch("http://localhost/timeLog/checkout?user=" + e.target.getAttribute("userid"))
+            .then((r) => {
+                this.refreshTimeLogs();
+                if (Math.floor(r.status / 100) !== 2) {
+                }
+            });
     }
 
     handleCheckinSelectOnClick = (e) => {
@@ -36,11 +69,11 @@ export class Home extends Component {
                                 </div>
                             </div>
                         </h4>
-                        <form>
+                        <form onSubmit={this.handleCheckinSubmit}>
                             <div className="input-group mb-3 mt-3">
                                 <input type="text" className="form-control" name="studentId" placeholder="Students's Id" value={this.state.checkinInput} onChange={(e) => this.setState({ checkinInput: e.target.value })} />
                                 <div className="input-group-append">
-                                    <button className="btn btn-outline-secondary" type="button" onClick={this.handleCheckinOnClick}>
+                                    <button className="btn btn-outline-secondary">
                                         Checkin
                                     </button>
                                     <Dropdown>
@@ -65,32 +98,37 @@ export class Home extends Component {
                             columns={[
                                 {
                                     Header: 'user',
-                                    accessor: 'userid',
+                                    accessor: 'userId',
                                     isSortable: true,
                                     Cell: ({ cell: { value } }) => String(this.state.usersMap[value] || value)
                                 },
                                 {
                                     Header: 'time in',
-                                    accessor: 'timein',
+                                    accessor: 'timeIn',
                                     isSortable: true,
                                     Cell: ({ cell: { value } }) => new Date(value * 1000).toLocaleString()
                                 },
                                 {
                                     Header: 'time out',
-                                    accessor: 'timeout',
+                                    accessor: 'timeOut',
                                     isSortable: true,
-                                    Cell: ({ cell: { value } }) => new Date(value * 1000).toLocaleString()
+                                    Cell: ({ cell: { value }, row: { original: { userId } } }) => {
+                                        if (value > 0) {
+                                            return new Date(value * 1000).toLocaleString()
+                                        }
+                                        else if (value === 0) {
+                                            return <button className="btn btn-primary" onClick={this.handleCheckoutOnClick} userid={userId}>Checkout</button>
+                                        }
+                                    }
                                 },
                                 {
                                     Header: 'season',
-                                    accessor: 'seasonid',
+                                    accessor: 'seasonId',
                                     isSortable: true,
                                 }
                             ]}
 
-                            data={[
-                                
-                            ]}
+                            data={this.state.timeLogs}
 
                             search={true}
 
