@@ -6,7 +6,7 @@ export class Home extends Component {
     state = {
         checkinInput: "",
         allUsers: [],
-
+        usersMap: {}
     }
 
     handleCheckinOnClick(e) {
@@ -20,31 +20,6 @@ export class Home extends Component {
     }
 
     render() {
-
-        const ds = [
-            {
-                "_id": "5c2f3183c9c9200004b372fe",
-                "userid": "dora",
-                "timein": 1,
-                "timeout": 2,
-                "seasonid": "before-2019-season"
-            },
-            {
-                "_id": "5c2f31c4c9c9200004b372ff",
-                "userid": "xiao_guai",
-                "timein": 2,
-                "timeout": 1,
-                "seasonid": "before-2019-season"
-            },
-            {
-                "_id": "5c2f31d0c9c9200004b37300",
-                "userid": "xiao_guai",
-                "timein": 5,
-                "timeout": -1,
-                "seasonid": "before-2019-season"
-            },
-        ];
-
         return (
             <div className="container-fluid">
                 <div className="row justify-content-md-center">
@@ -92,16 +67,19 @@ export class Home extends Component {
                                     Header: 'user',
                                     accessor: 'userid',
                                     isSortable: true,
+                                    Cell: ({ cell: { value } }) => String(this.state.usersMap[value] || value)
                                 },
                                 {
                                     Header: 'time in',
                                     accessor: 'timein',
                                     isSortable: true,
+                                    Cell: ({ cell: { value } }) => new Date(value * 1000).toLocaleString()
                                 },
                                 {
                                     Header: 'time out',
                                     accessor: 'timeout',
                                     isSortable: true,
+                                    Cell: ({ cell: { value } }) => new Date(value * 1000).toLocaleString()
                                 },
                                 {
                                     Header: 'season',
@@ -110,7 +88,9 @@ export class Home extends Component {
                                 }
                             ]}
 
-                            data={[]}
+                            data={[
+                                
+                            ]}
 
                             search={true}
 
