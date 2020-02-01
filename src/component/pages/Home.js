@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Dropdown } from 'react-bootstrap'
+import Table from '../modules/table'
 
 export class Home extends Component {
     state = {
@@ -60,8 +61,29 @@ export class Home extends Component {
                 </div>
 
                 <div className="row mt-4 justify-content-lg-center">
-                    <div className="col-lg-10 col">
-                        
+                    <div className="col-lg-8 col">
+                        <Table columns={[
+                            {
+                                Header: 'Age',
+                                accessor: 'age',
+                                isSortable: true,
+                            },
+                            {
+                                Header: 'Visits',
+                                accessor: 'visits',
+                                isSortable: true,
+                            },
+                            {
+                                Header: 'Status',
+                                accessor: 'status',
+                                isSortable: true,
+                            },
+                            {
+                                Header: 'Profile Progress',
+                                accessor: 'progress',
+                                isSortable: true,
+                            }
+                        ]} data={[]} />
                     </div>
                 </div>
             </div>
