@@ -23,32 +23,25 @@ function GlobalFilter({
     )
 }
 
-function Table({ columns, data, sort, pagination, search }) {
+function Table(props) {
+    const { columns, data, sort, pagination, search } = props;
+
+    // feature enable flags
     const enableSort = !!sort;
     const enablePagination = !!pagination;
     const enableSearch = !!search;
 
     const paginationInitStates = {};
     if (enablePagination) {
-
         if (pagination.pageSize) paginationInitStates.pageSize = pagination.pageSize;
     }
 
-    const filterTypes = React.useMemo(
-        () => ({
-            text: (rows, id, filterValue) => {
-                return rows.filter(row => {
-                    const rowValue = row.values[id]
-                    return rowValue !== undefined
-                        ? String(rowValue)
-                            .toLowerCase()
-                            .startsWith(String(filterValue).toLowerCase())
-                        : true
-                })
-            },
-        }),
-        []
-    )
+    const sortInitState = {};
+    if (enableSort) {
+        if (sort.sortBy) sortInitState.sortBy = sort.sortBy;
+    }
+
+    const text = props.text || {};
 
     // Use the state and functions returned from useTable to build your UI
     const {
@@ -78,9 +71,9 @@ function Table({ columns, data, sort, pagination, search }) {
         {
             columns,
             data,
-            filterTypes,
             initialState: {
-                ...(enablePagination ? paginationInitStates : {})
+                ...(enablePagination ? paginationInitStates : {}),
+                ...(enableSort ? sortInitState : {}),
             },
         },
         enableSearch ? useGlobalFilter : () => { },
@@ -147,8 +140,8 @@ function Table({ columns, data, sort, pagination, search }) {
                     }
 
                     {/* last page */}
-                    <li className={"paginate_button page-item " + (pageIndex === (pageOptions.length - 1) ? "active " : "")}>
-                        <a href="#" onClick={() => gotoPage(pageOptions.length - 1)} className="page-link">{pageOptions.length}</a>
+                    <li className={"paginate_button page-item " + (pageIndex === (pageCount - 1) ? "active " : "")}>
+                        <a href="#" onClick={() => gotoPage(pageCount - 1)} className="page-link">{pageCount}</a>
                     </li>
                 </Fragment>
             )
@@ -166,7 +159,20 @@ function Table({ columns, data, sort, pagination, search }) {
         <div className="dataTables_wrapper dt-bootstrap4">
             <div className="row">
                 <div className="col-sm-12 col-md-6">
-                    Count: <span>3</span>
+                    {
+                        enablePagination ? <div className="dataTables_length" id="timeLogsTable_length">
+                            <label>
+                                Show <select
+                                    className="custom-select custom-select-sm form-control form-control-sm"
+                                    value={pageSize} onChange={e => {
+                                        setPageSize(Number(e.target.value))
+                                    }}
+                                >
+                                    {[10, 25, 50, 100].map((pageSize, i) => <option key={i} value={pageSize}>{pageSize}</option>)}
+                                </select> entries
+                        </label>
+                        </div> : null
+                    }
                 </div>
                 <div className="col-sm-12 col-md-6">
                     <div className="dataTables_filter">
@@ -204,7 +210,7 @@ function Table({ columns, data, sort, pagination, search }) {
                             ))}
                         </thead>
                         <tbody {...getTableBodyProps()}>
-                            {tbodyRows.map(
+                            {tbodyRows.length > 0 ? tbodyRows.map(
                                 (row, i) => {
                                     prepareRow(row);
                                     return (
@@ -215,7 +221,11 @@ function Table({ columns, data, sort, pagination, search }) {
                                         </tr>
                                     )
                                 }
-                            )}
+                            ) :
+                                <tr className="odd">
+                                    <td colspan={columns.length} className="dataTables_empty" valign="top">{text.empty || "No matching records found"}</td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -223,7 +233,7 @@ function Table({ columns, data, sort, pagination, search }) {
             <div className="row">
                 <div className="col-sm-12 col-md-5">
                     <div className="dataTables_info" role="status" aria-live="polite">
-                        <span>Showing {1 + (enablePagination ? pageIndex * pageSize : 0)} to {enablePagination ? ((pageIndex + 1) * pageSize > rows.length ? rows.length : (pageIndex + 1) * pageSize) : rows.length} of {rows.length} entries</span>
+                        <span>Showing {(enablePagination ? pageIndex * pageSize : 0) + (rows.length !== 0 ? 1 : 0)} to {enablePagination ? ((pageIndex + 1) * pageSize > rows.length ? rows.length : (pageIndex + 1) * pageSize) : rows.length} of {rows.length} entries</span>
                         {enableSearch ? <span> (filtered from {data.length} total entries)</span> : null}
                     </div>
                 </div>
