@@ -1,9 +1,47 @@
 
 import React from 'react'
-import { useTable, useSortBy } from 'react-table'
+import { useTable, useSortBy, useGlobalFilter } from 'react-table'
 import '../../css/dataTables.bootstrap4.css'
 
+function GlobalFilter({
+    preGlobalFilteredRows,
+    globalFilter,
+    setGlobalFilter,
+}) {
+    const count = preGlobalFilteredRows.length
+
+    return (
+        <label>
+            Search:{' '}
+            <input
+                value={globalFilter || ''}
+                onChange={e => {
+                    setGlobalFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
+                }}
+                placeholder={`${count} records...`}
+                className="form-control form-control-sm"
+            />
+        </label>
+    )
+}
+
 function Table({ columns, data }) {
+    const filterTypes = React.useMemo(
+        () => ({
+            text: (rows, id, filterValue) => {
+                return rows.filter(row => {
+                    const rowValue = row.values[id]
+                    return rowValue !== undefined
+                        ? String(rowValue)
+                            .toLowerCase()
+                            .startsWith(String(filterValue).toLowerCase())
+                        : true
+                })
+            },
+        }),
+        []
+    )
+
     // Use the state and functions returned from useTable to build your UI
     const {
         getTableProps,
@@ -11,11 +49,16 @@ function Table({ columns, data }) {
         headerGroups,
         rows,
         prepareRow,
+        state,
+        preGlobalFilteredRows,
+        setGlobalFilter
     } = useTable(
         {
             columns,
             data,
+            filterTypes
         },
+        useGlobalFilter,
         useSortBy
     )
 
@@ -28,10 +71,11 @@ function Table({ columns, data }) {
                 </div>
                 <div className="col-sm-12 col-md-6">
                     <div className="dataTables_filter">
-                        <label>
-                            Search:
-                            <input type="search" className="form-control form-control-sm" placeholder="" />
-                        </label>
+                        <GlobalFilter
+                            preGlobalFilteredRows={preGlobalFilteredRows}
+                            globalFilter={state.globalFilter}
+                            setGlobalFilter={setGlobalFilter}
+                        />
                     </div>
                 </div>
             </div>
@@ -50,7 +94,9 @@ function Table({ columns, data }) {
                                         }
 
                                         return (
-                                            <th className={className}  {...column.getHeaderProps(column.getSortByToggleProps())}>{column.render('Header')}</th>
+                                            <th className={className}  {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                                {column.render('Header')}
+                                            </th>
                                         )
                                     })}
                                 </tr>

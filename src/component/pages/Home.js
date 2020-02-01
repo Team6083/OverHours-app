@@ -64,26 +64,48 @@ export class Home extends Component {
                     <div className="col-lg-8 col">
                         <Table columns={[
                             {
-                                Header: 'Age',
-                                accessor: 'age',
+                                Header: 'user',
+                                accessor: 'userid',
                                 isSortable: true,
                             },
                             {
-                                Header: 'Visits',
-                                accessor: 'visits',
+                                Header: 'time in',
+                                accessor: 'timein',
                                 isSortable: true,
                             },
                             {
-                                Header: 'Status',
-                                accessor: 'status',
+                                Header: 'time out',
+                                accessor: 'timeout',
                                 isSortable: true,
                             },
                             {
-                                Header: 'Profile Progress',
-                                accessor: 'progress',
+                                Header: 'season',
+                                accessor: 'seasonid',
                                 isSortable: true,
                             }
-                        ]} data={[]} />
+                        ]} data={[
+                            {
+                                "_id": "5c2f3183c9c9200004b372fe",
+                                "userid": "dora",
+                                "timein": 1,
+                                "timeout": 2,
+                                "seasonid": "before-2019-season"
+                            },
+                            {
+                                "_id": "5c2f31c4c9c9200004b372ff",
+                                "userid": "xiao_guai",
+                                "timein": 2,
+                                "timeout": 1,
+                                "seasonid": "before-2019-season"
+                            },
+                            {
+                                "_id": "5c2f31d0c9c9200004b37300",
+                                "userid": "xiao_guai",
+                                "timein": 5,
+                                "timeout": -1,
+                                "seasonid": "before-2019-season"
+                            }
+                        ]} />
                     </div>
                 </div>
             </div>
