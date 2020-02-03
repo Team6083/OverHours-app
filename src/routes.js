@@ -1,5 +1,6 @@
 import Home from './component/pages/Home'
 import User from './component/pages/User'
+import EditUser from './component/pages/user/EditUser'
 
 const navOnly = [
 
@@ -17,6 +18,13 @@ const route = [
         exact: true,
         component: User,
         name: 'User'
+    },
+    {
+        path: '/users/edit/:id',
+        exact: true,
+        component: EditUser,
+        name: 'Edit User',
+        hideOnNav: true
     }
 ];
 
