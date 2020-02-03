@@ -1,7 +1,8 @@
 import Home from './component/pages/Home'
+import User from './component/pages/User'
 
 const navOnly = [
-    
+
 ]
 
 const route = [
@@ -10,6 +11,12 @@ const route = [
         exact: true,
         component: Home,
         name: 'Home'
+    },
+    {
+        path: '/users',
+        exact: true,
+        component: User,
+        name: 'User'
     }
 ];
 
