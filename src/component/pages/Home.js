@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Dropdown } from 'react-bootstrap'
 import Table from '../modules/table'
+import { getUnfinishedTimeLog, checkinUser, checkoutUser } from '../../client/timeLog'
 
 export class Home extends Component {
     state = {
@@ -15,7 +16,7 @@ export class Home extends Component {
     }
 
     refreshTimeLogs = () => {
-        fetch("http://localhost/timeLog/unfinished")
+        getUnfinishedTimeLog()
             .then((r) => r.json())
             .then((res) => {
                 if (res) {
@@ -28,7 +29,7 @@ export class Home extends Component {
 
     handleCheckinSubmit = (e) => {
         e.preventDefault();
-        fetch("http://localhost/timeLog/checkin?user=" + this.state.checkinInput)
+        checkinUser(this.state.checkinInput)
             .then((r) => {
                 this.refreshTimeLogs();
                 if (Math.floor(r.status / 100) !== 2) {
@@ -38,7 +39,7 @@ export class Home extends Component {
     }
 
     handleCheckoutOnClick = (e) => {
-        fetch("http://localhost/timeLog/checkout?user=" + e.target.getAttribute("userid"))
+        checkoutUser(e.target.getAttribute("userid"))
             .then((r) => {
                 this.refreshTimeLogs();
                 if (Math.floor(r.status / 100) !== 2) {
