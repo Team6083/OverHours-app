@@ -23,8 +23,7 @@ function GlobalFilter({
     )
 }
 
-function Table(props) {
-    const { columns, data, sort, pagination, search } = props;
+function Table({ columns, data, sort, pagination, search, text = {}, hiddenColumns }) {
 
     // feature enable flags
     const enableSort = !!sort;
@@ -40,8 +39,6 @@ function Table(props) {
     if (enableSort) {
         if (sort.sortBy) sortInitState.sortBy = sort.sortBy;
     }
-
-    const text = props.text || {};
 
     // Use the state and functions returned from useTable to build your UI
     const {
@@ -74,6 +71,7 @@ function Table(props) {
             initialState: {
                 ...(enablePagination ? paginationInitStates : {}),
                 ...(enableSort ? sortInitState : {}),
+                ...(hiddenColumns ? { hiddenColumns } : {})
             },
         },
         enableSearch ? useGlobalFilter : () => { },
