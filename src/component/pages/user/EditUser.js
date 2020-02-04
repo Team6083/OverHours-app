@@ -1,17 +1,28 @@
 import React, { Component, useMemo } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { TextInput, EmailInput, Select } from '../../modules/form'
-import { useForm } from "react-form";
+import { toast } from 'react-toastify'
+import { useForm } from "react-form"
+import { getUser, saveUser } from '../../../client/user'
 
-function EditUserForm({ defaultValues }) {
+function EditUserForm({ defaultValues, onSave, userId }) {
     const {
         Form,
         meta: { isSubmitting, canSubmit }
     } = useForm({
-        onSubmit: (values) => { console.log(values) },
-        debugForm: true,
+        onSubmit: (values) => {
+            if (onSave) {
+                onSave(values).then((res) => {
+                    console.log(res);
+                });
+            }
+        },
         defaultValues: useMemo(() => { return { ...defaultValues } }, [])
     });
+
+    if (isSubmitting) {
+
+    }
 
     return (
         <Form>
@@ -61,16 +72,16 @@ function EditUserForm({ defaultValues }) {
                     ]} />
                 </div>
                 <div className="form-group col-md-3">
-                    <TextInput name="category" displayName="Category" placeholder="Category" required={true} />
+                    <TextInput name="category" displayName="Category" placeholder="Category" />
                 </div>
             </div>
 
             <div className="form-row">
                 <div className="form-group col-md-2">
-                    <TextInput name="firstYear" displayName="First Year" placeholder="First Year" type="number" required={true} />
+                    <TextInput name="firstYear" displayName="First Year" placeholder="First Year" type="number" />
                 </div>
                 <div className="form-group col-md-2">
-                    <TextInput name="graduationYear" displayName="Graduation Year" placeholder="Graduation Year" type="number" required={true} />
+                    <TextInput name="graduationYear" displayName="Graduation Year" placeholder="Graduation Year" type="number" />
                 </div>
             </div>
 
@@ -82,16 +93,47 @@ function EditUserForm({ defaultValues }) {
 export class EditUser extends Component {
 
     state = {
+        editUser: {},
+        error: null
+    }
+
+    componentDidMount = () => {
+        if (this.props.match) {
+            const id = this.props.match.params.id;
+            if (id !== "new") {
+                getUser(id).then((r) => r.json())
+                    .then((res) => {
+                        if (res.error) {
+                            this.setState({
+                                error: res.error
+                            })
+                        } else {
+                            this.setState({
+                                editUser: res
+                            })
+                        }
+                    });
+            }
+        }
+    }
+
+    handleFormOnSave = (user) => {
+        let id = this.props.match.params.id;
+        if (id === "new") id = null;
+        return saveUser(id, user).then((r) => r.json());
     }
 
     render() {
+        if (this.state.error) {
+            toast.error(this.state.error)
+        }
 
         return (
             <div className="container">
                 <h3>Edit user</h3>
                 <div className="row">
                     <div className="col">
-                        <EditUserForm className="mt-lg-4" />
+                        <EditUserForm className="mt-lg-4" onSave={this.handleFormOnSave} />
                     </div>
                 </div>
             </div >
@@ -99,4 +141,4 @@ export class EditUser extends Component {
     }
 }
 
-export default EditUser
+export default withRouter(EditUser)

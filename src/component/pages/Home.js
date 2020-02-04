@@ -8,7 +8,8 @@ export class Home extends Component {
         checkinInput: "",
         allUsers: [],
         usersMap: {},
-        timeLogs: []
+        timeLogs: [],
+        loaded: false
     }
 
     componentDidMount = () => {
@@ -21,7 +22,8 @@ export class Home extends Component {
             .then((res) => {
                 if (res) {
                     this.setState({
-                        timeLogs: res
+                        timeLogs: res,
+                        loaded: true
                     });
                 }
             });
@@ -120,6 +122,7 @@ export class Home extends Component {
                                         else if (value === 0) {
                                             return <button className="btn btn-primary" onClick={this.handleCheckoutOnClick} userid={userId}>Checkout</button>
                                         }
+                                        return value
                                     }
                                 },
                                 {
@@ -138,6 +141,8 @@ export class Home extends Component {
                                     { id: "timein", desc: true }
                                 ]
                             }}
+
+                            loaded={this.state.loaded}
                         />
                     </div>
                 </div>

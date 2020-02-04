@@ -23,7 +23,7 @@ function GlobalFilter({
     )
 }
 
-function Table({ columns, data, sort, pagination, search, text = {}, hiddenColumns }) {
+function Table({ columns, data, sort, pagination, search, text = {}, hiddenColumns, loaded = true }) {
 
     // feature enable flags
     const enableSort = !!sort;
@@ -208,7 +208,7 @@ function Table({ columns, data, sort, pagination, search, text = {}, hiddenColum
                             ))}
                         </thead>
                         <tbody {...getTableBodyProps()}>
-                            {tbodyRows.length > 0 ? tbodyRows.map(
+                            {tbodyRows.length > 0 && loaded ? tbodyRows.map(
                                 (row, i) => {
                                     prepareRow(row);
                                     return (
@@ -221,7 +221,18 @@ function Table({ columns, data, sort, pagination, search, text = {}, hiddenColum
                                 }
                             ) :
                                 <tr className="odd">
-                                    <td colSpan={columns.length} className="dataTables_empty" valign="top">{text.empty || "No matching records found"}</td>
+                                    <td colSpan={columns.length} className="dataTables_empty" valign="top">
+                                        {loaded ?
+                                            (text.empty || "No matching records found") :
+                                            (text.loading ||
+                                                (
+                                                    <>
+                                                        <div className="spinner-border text-dark" role="status">
+                                                            <span className="sr-only">Loading...</span>
+                                                        </div>
+                                                    </>
+                                                ))}
+                                    </td>
                                 </tr>
                             }
                         </tbody>
