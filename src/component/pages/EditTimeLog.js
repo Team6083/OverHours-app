@@ -1,6 +1,6 @@
 import React, { Component, useMemo } from 'react'
 import { withRouter } from 'react-router-dom'
-import { TextInput } from '../modules/form'
+import { TextInput, DateTimeInput } from '../modules/form'
 import { getTimeLog, saveTimeLog } from '../../client/timeLog'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-form'
@@ -40,7 +40,7 @@ function EditTimeLogForm({ defaultValues, onSave }) {
 
             <div className="form-row">
                 <div className="form-group col-md-4">
-                    <TextInput name="timeIn" displayName="Time In" required={true} />
+                    <DateTimeInput name="timeIn" displayName="Time In" required={true} />
                 </div>
                 <div className="form-group col-md-4">
                     <TextInput name="timeOut" displayName="Time Out" />

@@ -1,6 +1,8 @@
-import React from 'react';
+import React from 'react'
 
-import { useField } from "react-form";
+import { useField } from 'react-form'
+import Flatpickr from 'react-flatpickr'
+import 'flatpickr/dist/themes/light.css'
 
 export function TextInput({ name, displayName = name, validator, required, type = "text", placeholder = "", inputGroup, disabled = false }) {
     const {
@@ -120,4 +122,51 @@ export function Select({ name, displayName = name, validator, required, options 
             </select>
         </>
     )
+}
+
+export function DateTimeInput({ name, displayName = name, validator, required, placeholder = "", disabled = false }) {
+    const {
+        meta: { error, isTouched, isValidating },
+        getInputProps
+    } = useField(name, {
+        validate: validator ? validator : (value) => {
+            console.log(value);
+            if (required && (value === "" || value === undefined || value === null)) {
+                return "A " + displayName + " is required";
+            }
+
+            return false;
+        }
+    });
+
+    let inputProps = getInputProps();
+    let { className, style, value, onChange } = inputProps;
+    delete inputProps.className;
+    delete inputProps.style;
+    delete inputProps.value;
+    delete inputProps.onChange;
+
+    value = value ? value : null;
+    className += " form-control";
+    style = {
+        ...style,
+        ...(!isValidating && isTouched && error ? { borderColor: "#dc3545" } : {})
+    }
+
+    return (
+        <>
+            <label>{displayName}</label>
+            <Flatpickr
+                className={className}
+                style={style} value={value} placeholder={placeholder} disabled={disabled} onChange={(date) => {
+                    onChange({ target: { value: date } });
+                }} data-enable-time
+                {...inputProps} />{" "}
+            {isValidating ? (
+                <div className="valid-feedback d-block">Validating...</div>
+            ) : isTouched && error ? (
+                <div className="invalid-feedback d-block">{error}</div>
+            ) : null}
+        </>
+    );
 }
