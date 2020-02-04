@@ -138,7 +138,7 @@ export class Home extends Component {
 
                             sort={{
                                 sortBy: [
-                                    { id: "timein", desc: true }
+                                    { id: "timeIn", desc: true }
                                 ]
                             }}
 

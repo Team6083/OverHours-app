@@ -1,6 +1,10 @@
 import Home from './component/pages/Home'
+
 import User from './component/pages/User'
 import EditUser from './component/pages/user/EditUser'
+
+import TimeLog from './component/pages/TimeLog'
+import EditTimeLog from './component/pages/EditTimeLog'
 
 const navOnly = [
 
@@ -24,6 +28,19 @@ const route = [
         exact: true,
         component: EditUser,
         name: 'Edit User',
+        hideOnNav: true
+    },
+    {
+        path: '/timeLogs',
+        exact: true,
+        component: TimeLog,
+        name: 'TimeLog'
+    },
+    {
+        path: '/timeLogs/edit/:id',
+        exact: true,
+        component: EditTimeLog,
+        name: 'Edit TimeLog',
         hideOnNav: true
     }
 ];

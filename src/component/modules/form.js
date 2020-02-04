@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useField } from "react-form";
 
-export function TextInput({ name, displayName = name, validator, required, type = "text", placeholder = "", inputGroup }) {
+export function TextInput({ name, displayName = name, validator, required, type = "text", placeholder = "", inputGroup, disabled = false }) {
     const {
         meta: { error, isTouched, isValidating },
         getInputProps
@@ -42,7 +42,9 @@ export function TextInput({ name, displayName = name, validator, required, type 
                                     {inputGroup.prepend}
                                 </div> : null
                         }
-                        <input id={"edit" + name} className={className} type={type} style={style} value={value} placeholder={placeholder} {...inputProps} />{" "}
+                        <input id={"edit" + name} className={className}
+                            type={type} style={style} value={value} placeholder={placeholder} disabled={disabled}
+                            {...inputProps} />{" "}
                         {isValidating ? (
                             <div className="valid-feedback d-block">Validating...</div>
                         ) : isTouched && error ? (
@@ -56,7 +58,9 @@ export function TextInput({ name, displayName = name, validator, required, type 
                         }
                     </div> :
                     <>
-                        <input id={"edit" + name} className={className} type={type} style={style} value={value} placeholder={placeholder} {...inputProps} />{" "}
+                        <input id={"edit" + name} className={className}
+                            type={type} style={style} value={value} placeholder={placeholder} disabled={disabled}
+                            {...inputProps} />{" "}
                         {isValidating ? (
                             <div className="valid-feedback d-block">Validating...</div>
                         ) : isTouched && error ? (

@@ -17,7 +17,7 @@ function EditUserForm({ defaultValues, onSave, userId }) {
                 });
             }
         },
-        defaultValues: useMemo(() => { return { ...defaultValues } }, [])
+        defaultValues: useMemo(() => { return { ...defaultValues } }, [defaultValues])
     });
 
     if (isSubmitting) {

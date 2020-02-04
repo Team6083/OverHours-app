@@ -8,7 +8,10 @@ export const saveUser = (userId, user) => {
     if (userId) {
         return fetch(apiHost + "/users/" + userId, {
             method: "PUT",
-            body: JSON.stringify(user)
+            body: JSON.stringify(user),
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
         })
     } else {
         return fetch(apiHost + "/users/", {
