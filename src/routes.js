@@ -18,6 +18,19 @@ const route = [
         name: 'Home'
     },
     {
+        path: '/timeLogs',
+        exact: true,
+        component: TimeLog,
+        name: 'TimeLog'
+    },
+    {
+        path: '/timeLogs/edit/:id',
+        exact: true,
+        component: EditTimeLog,
+        name: 'Edit TimeLog',
+        hideOnNav: true
+    },
+    {
         path: '/users',
         exact: true,
         component: User,
@@ -30,19 +43,6 @@ const route = [
         name: 'Edit User',
         hideOnNav: true
     },
-    {
-        path: '/timeLogs',
-        exact: true,
-        component: TimeLog,
-        name: 'TimeLog'
-    },
-    {
-        path: '/timeLogs/edit/:id',
-        exact: true,
-        component: EditTimeLog,
-        name: 'Edit TimeLog',
-        hideOnNav: true
-    }
 ];
 
 export { navOnly };

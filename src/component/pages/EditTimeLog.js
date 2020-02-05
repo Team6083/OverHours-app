@@ -8,10 +8,11 @@ import { useForm } from 'react-form'
 function EditTimeLogForm({ defaultValues, onSave, onDelete }) {
     const {
         Form,
-        meta: { isSubmitting, canSubmit }
+        meta: { isSubmitting, canSubmit },
+        setFieldValue
     } = useForm({
         onSubmit: onSave,
-        defaultValues: useMemo(() => { return { ...defaultValues } }, [defaultValues])
+        defaultValues: useMemo(() => { return { ...defaultValues, timeIn: (defaultValues.timeIn ? defaultValues.timeIn : Math.floor(new Date().getTime() / 1000)) } }, [defaultValues])
     });
 
     return (
@@ -30,10 +31,40 @@ function EditTimeLogForm({ defaultValues, onSave, onDelete }) {
 
             <div className="form-row">
                 <div className="form-group col-md-4">
-                    <DateTimeInput name="timeIn" displayName="Time In" required={true} />
+                    <DateTimeInput name="timeIn" displayName={
+                        <>
+                            {"Time In "}
+                            <button type="button" className="btn btn-info btn-sm" onClick={() => {
+                                setFieldValue("timeIn", Math.floor(new Date().getTime() / 1000));
+                            }}>Now
+                            </button>
+                        </>
+                    } required={true} />
                 </div>
                 <div className="form-group col-md-4">
-                    <DateTimeInput name="timeOut" displayName="Time Out" />
+                    <DateTimeInput name="timeOut" displayName={
+                        <>
+                            {"Time Out "}
+                            <button type="button" className="btn btn-warning btn-sm"
+                                onClick={() => {
+                                    setFieldValue("timeOut", 0);
+                                }}
+                            >Clear Time Out
+                            </button>{" "}
+                            <button type="button" className="btn btn-info btn-sm"
+                                onClick={() => {
+                                    setFieldValue("timeOut", Math.floor(new Date().getTime() / 1000));
+                                }}
+                            >Now
+                            </button>{" "}
+                            <button type="button" className="btn btn-danger btn-sm"
+                                onClick={() => {
+                                    setFieldValue("timeOut", -1);
+                                }}
+                            >Exceed
+                            </button>
+                        </>
+                    } />
                 </div>
             </div>
 
@@ -74,6 +105,10 @@ export class EditTimeLog extends Component {
                             })
                         }
                     });
+            } else {
+                this.setState({
+                    loaded: true
+                })
             }
         }
     }
@@ -87,9 +122,10 @@ export class EditTimeLog extends Component {
         return saveTimeLog(id, timeLog).then((r) => r.json())
             .then((res) => {
                 if (res.error) {
-                    toast.update(toastId, { type: toast.TYPE.ERROR, autoClose: 5000, render: res.error })
+                    toast.update(toastId, { type: toast.TYPE.ERROR, autoClose: 5000, render: res.error });
                 } else {
-                    toast.update(toastId, { type: toast.TYPE.SUCCESS, autoClose: 5000, render: "Done" })
+                    toast.update(toastId, { type: toast.TYPE.SUCCESS, autoClose: 5000, render: "Done" });
+                    this.props.history.push("/timeLogs");
                 }
 
                 return Promise.resolve(res);
@@ -109,7 +145,7 @@ export class EditTimeLog extends Component {
                     toastId = toast("Deleting...", { autoClose: false })
                     deleteTimeLog(id).then((r) => {
                         if (r.ok && (r.status >= 200 && r.status < 300)) {
-                            toast.update(toastId, { type: toast.TYPE.SUCCESS, render: "Done", autoClose: 5000 })
+                            toast.update(toastId, { type: toast.TYPE.SUCCESS, render: "Done", autoClose: 5000 });
                             this.props.history.push("/timeLogs");
                         }
                     })

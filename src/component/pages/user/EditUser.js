@@ -20,10 +20,6 @@ function EditUserForm({ defaultValues, onSave }) {
         defaultValues: useMemo(() => { return { ...defaultValues } }, [defaultValues])
     });
 
-    if (isSubmitting) {
-
-    }
-
     return (
         <Form>
             <div className="form-row">
@@ -85,7 +81,7 @@ function EditUserForm({ defaultValues, onSave }) {
                 </div>
             </div>
 
-            <button className="btn btn-primary" type="submit" disabled={!canSubmit}>Submit</button>
+            <button className="btn btn-primary" type="submit" disabled={!canSubmit || isSubmitting}>Submit</button>
         </Form>
     )
 }
@@ -115,6 +111,10 @@ export class EditUser extends Component {
                             })
                         }
                     });
+            } else {
+                this.setState({
+                    loaded: true
+                })
             }
         }
     }

@@ -129,7 +129,7 @@ export function Select({ name, displayName = name, validator, required, options 
     )
 }
 
-export function DateTimeInput({ name, displayName = name, validator, required, placeholder = "", disabled = false }) {
+export function DateTimeInput({ name, displayName = name, validator, required }) {
     const {
         meta: { error, isTouched, isValidating },
         getInputProps

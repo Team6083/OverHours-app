@@ -22,11 +22,11 @@ const Links = (props) => {
     let userLogined = true;
 
     const linkList = allLinks.map((route, i) => {
-        const { path, name, permission, hideOnNav } = route;
+        const { path, name, permission, hideOnNav, exact } = route;
         const renderLink = () => {
             return (
                 <Nav.Item key={i}>
-                    <NavLink className="nav-link" to={path}>{name}</NavLink>
+                    <NavLink className="nav-link" to={path} exact={exact}>{name}</NavLink>
                 </Nav.Item>
             )
         }
