@@ -122,7 +122,19 @@ export class EditUser extends Component {
     handleFormOnSave = (user) => {
         let id = this.props.match.params.id;
         if (id === "new") id = null;
-        return saveUser(id, user).then((r) => r.json());
+
+        let toastId = toast("Saving...", { autoClose: false });
+
+        return saveUser(id, user).then((r) => r.json()).then((res) => {
+            if (res.error) {
+                toast.update(toastId, { type: toast.TYPE.ERROR, autoClose: 5000, render: res.error });
+            } else {
+                toast.update(toastId, { type: toast.TYPE.SUCCESS, autoClose: 5000, render: "Done" });
+                this.props.history.push("/users");
+            }
+
+            return Promise.resolve(res);
+        });
     }
 
     render() {
