@@ -111,7 +111,7 @@ export class EditUser extends Component {
                         } else {
                             this.setState({
                                 editUser: res,
-                                loaded: false
+                                loaded: true
                             })
                         }
                     });
