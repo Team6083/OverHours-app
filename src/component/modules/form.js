@@ -120,6 +120,11 @@ export function Select({ name, displayName = name, validator, required, options 
                     })
                 }
             </select>
+            {isValidating ? (
+                <div className="valid-feedback d-block">Validating...</div>
+            ) : isTouched && error ? (
+                <div className="invalid-feedback d-block">{error}</div>
+            ) : null}
         </>
     )
 }
@@ -130,7 +135,6 @@ export function DateTimeInput({ name, displayName = name, validator, required, p
         getInputProps
     } = useField(name, {
         validate: validator ? validator : (value) => {
-            console.log(value);
             if (required && (value === "" || value === undefined || value === null)) {
                 return "A " + displayName + " is required";
             }
@@ -146,7 +150,7 @@ export function DateTimeInput({ name, displayName = name, validator, required, p
     delete inputProps.value;
     delete inputProps.onChange;
 
-    value = value ? value : null;
+    value = value ? (value !== -1 ? new Date(value * 1000) : -1) : null;
     className += " form-control";
     style = {
         ...style,
@@ -157,11 +161,23 @@ export function DateTimeInput({ name, displayName = name, validator, required, p
         <>
             <label>{displayName}</label>
             <Flatpickr
-                className={className}
-                style={style} value={value} placeholder={placeholder} disabled={disabled} onChange={(date) => {
-                    onChange({ target: { value: date } });
-                }} data-enable-time
-                {...inputProps} />{" "}
+                options={
+                    {
+                        enableTime: true,
+                        time_24hr: true,
+                        static: false,
+                        altInput: true,
+                        altFormat: value !== -1 ? "Y/m/j K h:i:S" : "\\L\\i\\m\\i\\t \\E\\x\\c\\e\\e\\d",
+                        dateFormat: "U",
+                    }
+                }
+                className={className} style={style}
+
+                value={value === -1 ? new Date() : value}
+
+                onChange={(date) => {
+                    onChange({ target: { value: date[0].getTime() / 1000 } });
+                }} data-enable-time {...inputProps} />{" "}
             {isValidating ? (
                 <div className="valid-feedback d-block">Validating...</div>
             ) : isTouched && error ? (

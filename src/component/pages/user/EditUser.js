@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 import { useForm } from "react-form"
 import { getUser, saveUser } from '../../../client/user'
 
-function EditUserForm({ defaultValues, onSave, userId }) {
+function EditUserForm({ defaultValues, onSave }) {
     const {
         Form,
         meta: { isSubmitting, canSubmit }
@@ -133,7 +133,7 @@ export class EditUser extends Component {
                 <h3>Edit user</h3>
                 <div className="row">
                     <div className="col">
-                        <EditUserForm className="mt-lg-4" onSave={this.handleFormOnSave} />
+                        <EditUserForm className="mt-lg-4" defaultValues={this.state.editUser} onSave={this.handleFormOnSave} />
                     </div>
                 </div>
             </div >

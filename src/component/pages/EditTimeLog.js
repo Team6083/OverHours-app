@@ -1,28 +1,18 @@
-import React, { Component, useMemo } from 'react'
+import React, { Component, useMemo, Fragment } from 'react'
 import { withRouter } from 'react-router-dom'
 import { TextInput, DateTimeInput } from '../modules/form'
-import { getTimeLog, saveTimeLog } from '../../client/timeLog'
+import { getTimeLog, saveTimeLog, deleteTimeLog } from '../../client/timeLog'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-form'
 
-function EditTimeLogForm({ defaultValues, onSave }) {
+function EditTimeLogForm({ defaultValues, onSave, onDelete }) {
     const {
         Form,
         meta: { isSubmitting, canSubmit }
     } = useForm({
-        onSubmit: (values) => {
-            if (onSave) {
-                onSave(values).then((res) => {
-                    console.log(res);
-                });
-            }
-        },
+        onSubmit: onSave,
         defaultValues: useMemo(() => { return { ...defaultValues } }, [defaultValues])
     });
-
-    if (isSubmitting) {
-
-    }
 
     return (
         <Form>
@@ -43,16 +33,16 @@ function EditTimeLogForm({ defaultValues, onSave }) {
                     <DateTimeInput name="timeIn" displayName="Time In" required={true} />
                 </div>
                 <div className="form-group col-md-4">
-                    <TextInput name="timeOut" displayName="Time Out" />
+                    <DateTimeInput name="timeOut" displayName="Time Out" />
                 </div>
             </div>
 
             <div className="form-row">
                 <div className="form-group col-md-8">
-                    <button className="btn btn-primary btn-block" type="submit" disabled={!canSubmit}>Submit</button>
+                    <button className="btn btn-primary btn-block" type="submit" disabled={!canSubmit || isSubmitting}>Submit</button>
                 </div>
                 <div className="form-group col-md-4">
-                    <button className="btn btn-danger btn-block" type="button">Delete</button>
+                    <button className="btn btn-danger btn-block" type="button" onClick={onDelete}>Delete</button>
                 </div>
             </div>
         </Form>
@@ -89,13 +79,48 @@ export class EditTimeLog extends Component {
     handleFormOnSave = (timeLog) => {
         let id = this.props.match.params.id;
         if (id === "new") id = null;
-        console.log(timeLog);
-        return saveTimeLog(id, timeLog).then((r) => r.json());
+
+        let toastId = toast("Saving...", { autoClose: false });
+
+        return saveTimeLog(id, timeLog).then((r) => r.json())
+            .then((res) => {
+                if (res.error) {
+                    toast.update(toastId, { type: toast.TYPE.ERROR, autoClose: 5000, render: res.error })
+                } else {
+                    toast.update(toastId, { type: toast.TYPE.SUCCESS, autoClose: 5000, render: "Done" })
+                }
+
+                return Promise.resolve(res);
+            });
+    }
+
+    handleFormOnDelete = () => {
+        let id = this.props.match.params.id;
+        if (id === "new") id = null;
+
+        let toastId;
+
+        toast(
+            <Fragment>
+                Confirm to delete?{" "}
+                <button className="btn btn-sm btn-outline-danger" onClick={() => {
+                    toastId = toast("Deleting...", { autoClose: false })
+                    deleteTimeLog(id).then((r) => {
+                        if (r.ok && (r.status >= 200 && r.status < 300)) {
+                            toast.update(toastId, { type: toast.TYPE.SUCCESS, render: "Done", autoClose: 5000 })
+                            this.props.history.push("/timeLogs");
+                        }
+                    })
+                }}>Yes</button>
+                {" "}
+                <button className="btn btn-sm btn-outline-secondary">No</button>
+            </Fragment>
+        )
     }
 
     render() {
         if (this.state.error) {
-            toast.error(this.state.error)
+            toast.error(this.state.error);
         }
 
         return (
@@ -103,7 +128,9 @@ export class EditTimeLog extends Component {
                 <h3>Edit timeLog</h3>
                 <div className="row justify-content-lg-center">
                     <div className="col col-lg-10">
-                        <EditTimeLogForm className="mt-lg-4" defaultValues={this.state.editTimeLog} onSave={this.handleFormOnSave} />
+                        <EditTimeLogForm className="mt-lg-4" defaultValues={this.state.editTimeLog}
+                            onSave={this.handleFormOnSave}
+                            onDelete={this.handleFormOnDelete} />
                     </div>
                 </div>
             </div >

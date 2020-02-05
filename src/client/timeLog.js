@@ -14,7 +14,7 @@ export const saveTimeLog = (timeLogId, timeLog) => {
             }
         })
     } else {
-        return fetch(apiHost + "/users/", {
+        return fetch(apiHost + "/timeLogs/", {
             method: "POST",
             body: JSON.stringify(timeLog),
             headers: {
@@ -22,6 +22,12 @@ export const saveTimeLog = (timeLogId, timeLog) => {
             }
         })
     }
+}
+
+export const deleteTimeLog = (timeLogId) => {
+    return fetch(apiHost + "/timeLogs/" + timeLogId, {
+        method: "DELETE"
+    })
 }
 
 export const checkinUser = (userName, season = null) => { return fetch(apiHost + "/timeLog/checkin?user=" + userName + (season ? "&season=" + season : "")) }

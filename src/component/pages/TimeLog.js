@@ -15,13 +15,10 @@ export class TimeLog extends Component {
         getTimeLogs()
             .then((r) => r.json())
             .then((res) => {
-                if (res) {
-                    console.log(res);
-                    this.setState({
-                        allTimeLog: res,
-                        loaded: true
-                    })
-                }
+                this.setState({
+                    allTimeLog: res,
+                    loaded: true
+                })
             })
     }
 
@@ -63,12 +60,12 @@ export class TimeLog extends Component {
                                             Header: 'time out',
                                             accessor: 'timeOut',
                                             isSortable: true,
-                                            Cell: ({ cell: { value }, row: { original: { userId } } }) => {
+                                            Cell: ({ cell: { value } }) => {
                                                 if (value > 0) {
                                                     return new Date(value * 1000).toLocaleString()
                                                 }
                                                 else if (value === 0) {
-                                                    return <button className="btn btn-primary" onClick={this.handleCheckoutOnClick} userid={userId}>Checkout</button>
+                                                    return "Current In"
                                                 }
                                                 return value
                                             }
