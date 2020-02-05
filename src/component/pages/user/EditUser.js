@@ -94,6 +94,7 @@ export class EditUser extends Component {
 
     state = {
         editUser: {},
+        loaded: false,
         error: null
     }
 
@@ -109,7 +110,8 @@ export class EditUser extends Component {
                             })
                         } else {
                             this.setState({
-                                editUser: res
+                                editUser: res,
+                                loaded: false
                             })
                         }
                     });
@@ -133,7 +135,20 @@ export class EditUser extends Component {
                 <h3>Edit user</h3>
                 <div className="row">
                     <div className="col">
-                        <EditUserForm className="mt-lg-4" defaultValues={this.state.editUser} onSave={this.handleFormOnSave} />
+                        {this.state.loaded ?
+                            <EditUserForm className="mt-lg-4" defaultValues={this.state.editUser} onSave={this.handleFormOnSave} />
+                            :
+                            <div className="text-center mt-2">
+                                {
+                                    this.state.error ?
+                                        <h5><span className="badge badge-danger">{this.state.error}</span></h5>
+                                        :
+                                        <div className="spinner-border text-primary" role="status">
+                                            <span className="sr-only">Loading...</span>
+                                        </div>
+                                }
+                            </div>
+                        }
                     </div>
                 </div>
             </div >

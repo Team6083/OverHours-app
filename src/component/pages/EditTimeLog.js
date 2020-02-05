@@ -53,7 +53,8 @@ export class EditTimeLog extends Component {
 
     state = {
         editTimeLog: {},
-        error: null
+        error: null,
+        loaded: false
     }
 
     componentDidMount = () => {
@@ -68,7 +69,8 @@ export class EditTimeLog extends Component {
                             })
                         } else {
                             this.setState({
-                                editTimeLog: res
+                                editTimeLog: res,
+                                loaded: true
                             })
                         }
                     });
@@ -128,9 +130,21 @@ export class EditTimeLog extends Component {
                 <h3>Edit timeLog</h3>
                 <div className="row justify-content-lg-center">
                     <div className="col col-lg-10">
-                        <EditTimeLogForm className="mt-lg-4" defaultValues={this.state.editTimeLog}
-                            onSave={this.handleFormOnSave}
-                            onDelete={this.handleFormOnDelete} />
+                        {
+                            this.state.loaded ? <EditTimeLogForm className="mt-lg-4" defaultValues={this.state.editTimeLog}
+                                onSave={this.handleFormOnSave}
+                                onDelete={this.handleFormOnDelete} /> :
+                                <div className="text-center mt-2">
+                                    {
+                                        this.state.error ?
+                                            <h5><span className="badge badge-danger">{this.state.error}</span></h5>
+                                            :
+                                            <div className="spinner-border text-primary" role="status">
+                                                <span className="sr-only">Loading...</span>
+                                            </div>
+                                    }
+                                </div>
+                        }
                     </div>
                 </div>
             </div >
