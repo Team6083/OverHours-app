@@ -15,6 +15,13 @@ export function TextInput({ name, displayName = name, validator, required, type 
             }
 
             return false;
+        },
+        filterValue: (value) => {
+            if (type === "number") {
+                return parseFloat(value);
+            } else {
+                return value;
+            }
         }
     });
 
