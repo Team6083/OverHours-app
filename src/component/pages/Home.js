@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Dropdown } from 'react-bootstrap'
 import Table from '../modules/table'
 import { getUnfinishedTimeLog, checkinUser, checkoutUser } from '../../client/timeLog'
+import { toast } from 'react-toastify'
 
 export class Home extends Component {
     state = {
@@ -31,11 +32,21 @@ export class Home extends Component {
 
     handleCheckinSubmit = (e) => {
         e.preventDefault();
+        let toastId = toast("Checkin...", { autoClose: false });
         checkinUser(this.state.checkinInput)
             .then((r) => {
-                this.refreshTimeLogs();
-                if (Math.floor(r.status / 100) !== 2) {
-
+                if (r.status >= 200 && r.status < 300) {
+                    toast.update(toastId, { autoClose: 5000, type: toast.TYPE.SUCCESS, render: "Done" });
+                    this.refreshTimeLogs();
+                    return null;
+                } else {
+                    return r.json();
+                }
+            })
+            .then((res) => {
+                if (!res) return;
+                if (res.error) {
+                    toast.update(toastId, { autoClose: 5000, type: toast.TYPE.ERROR, render: res.error });
                 }
             });
     }
