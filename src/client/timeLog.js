@@ -30,5 +30,18 @@ export const deleteTimeLog = ({ timeLogId }) => {
     })
 }
 
-export const checkinUser = ({ userName, season = null }) => fetch(apiHost + "/timeLog/checkin?user=" + userName + (season ? "&season=" + season : "")).then((r) => r.status === 422 ? r.json().then((error) => Promise.reject(error)) : Promise.resolve());
-export const checkoutUser = ({ userName }) => fetch(apiHost + "/timeLog/checkout?user=" + userName).then((r) => r.status === 422 ? r.json().then((error) => Promise.reject(error)) : Promise.resolve());
+export const checkinUser = ({ userName, season = null }) => fetch(apiHost + `/timeLog/checkin?user=${userName}` + (season ? `&season=${season}` : ""))
+    .then((r) => {
+        if (r.status === 422) {
+            return r.json().then((error) => Promise.reject(error));
+        }
+        return Promise.resolve();
+    })
+
+export const checkoutUser = ({ userName }) => fetch(apiHost + `/timeLog/checkout?user=${userName}`)
+    .then((r) => {
+        if (r.status === 422) {
+            return r.json().then((error) => Promise.reject(error));
+        }
+        return Promise.resolve();
+    })
