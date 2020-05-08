@@ -1,10 +1,10 @@
 const apiHost = process.env.REACT_APP_API_HOST;
 
 export const getTimeLogs = () => fetch(apiHost + "/timeLogs/")
-export const getUnfinishedTimeLog = () => fetch(apiHost + "/timeLog/unfinished")
+export const getUnfinishedTimeLog = () => fetch(apiHost + "/timeLog/unfinished").then((r) => r.json());
 
-export const getTimeLog = (timeLogId) => fetch(apiHost + "/timeLogs/" + timeLogId)
-export const saveTimeLog = (timeLogId, timeLog) => {
+export const getTimeLog = ({ timeLogId }) => fetch(apiHost + "/timeLogs/" + timeLogId)
+export const saveTimeLog = ({ timeLogId, timeLog }) => {
     if (timeLogId) {
         return fetch(apiHost + "/timeLogs/" + timeLogId, {
             method: "PUT",
@@ -24,11 +24,11 @@ export const saveTimeLog = (timeLogId, timeLog) => {
     }
 }
 
-export const deleteTimeLog = (timeLogId) => {
+export const deleteTimeLog = ({ timeLogId }) => {
     return fetch(apiHost + "/timeLogs/" + timeLogId, {
         method: "DELETE"
     })
 }
 
-export const checkinUser = (userName, season = null) => { return fetch(apiHost + "/timeLog/checkin?user=" + userName + (season ? "&season=" + season : "")) }
-export const checkoutUser = (userName) => { return fetch(apiHost + "/timeLog/checkout?user=" + userName) }
+export const checkinUser = ({ userName, season = null }) => fetch(apiHost + "/timeLog/checkin?user=" + userName + (season ? "&season=" + season : "")).then((r) => r.status === 422 ? r.json().then((error) => Promise.reject(error)) : Promise.resolve());
+export const checkoutUser = ({ userName }) => fetch(apiHost + "/timeLog/checkout?user=" + userName).then((r) => r.status === 422 ? r.json().then((error) => Promise.reject(error)) : Promise.resolve());

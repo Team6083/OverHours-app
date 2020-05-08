@@ -1,4 +1,5 @@
 import Home from './component/pages/Home'
+import Login from './component/pages/Login'
 
 import User from './component/pages/User'
 import EditUser from './component/pages/user/EditUser'
@@ -16,6 +17,12 @@ const route = [
         exact: true,
         component: Home,
         name: 'Home'
+    },
+    {
+        path: '/auth/login',
+        component: Login,
+        name: 'Login',
+        hideOnNav: true
     },
     {
         path: '/timeLogs',
@@ -42,7 +49,7 @@ const route = [
         component: EditUser,
         name: 'Edit User',
         hideOnNav: true
-    },
+    }
 ];
 
 export { navOnly };
