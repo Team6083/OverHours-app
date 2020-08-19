@@ -3,9 +3,10 @@ import { Link, withRouter } from 'react-router-dom'
 import { TextInput, EmailInput, Select } from '../../modules/form'
 import { toast } from 'react-toastify'
 import { useForm } from "react-form"
-import { getUser, saveUser } from '../../../client/user'
+import { getUser, saveUser, deleteUser } from '../../../client/user'
+import { Modal } from 'react-bootstrap'
 
-function EditUserForm({ defaultValues, onSave }) {
+function EditUserForm({ defaultValues, isNew = false, onSave, onDelete }) {
     const {
         Form,
         meta: { isSubmitting, canSubmit }
@@ -34,7 +35,7 @@ function EditUserForm({ defaultValues, onSave }) {
                     <TextInput name="name" displayName="Name" placeholder="Name" required={true} />
                 </div>
                 <div className="form-group col-md-6">
-                    <EmailInput name="email" placeholder="Email" displayName="Email" required={true} />
+                    <EmailInput name="email" placeholder="Email" displayName="Email" />
                 </div>
             </div>
 
@@ -81,7 +82,14 @@ function EditUserForm({ defaultValues, onSave }) {
                 </div>
             </div>
 
-            <button className="btn btn-primary" type="submit" disabled={!canSubmit || isSubmitting}>Submit</button>
+            <div className="form-row">
+                <div className="col-12 col-md-8">
+                    <button className="btn btn-primary btn-block" type="submit" disabled={!canSubmit || isSubmitting}>Save</button>
+                </div>
+                <div className="col-12 col-md-4">
+                    <button className="btn btn-danger btn-block" type="button" onClick={onDelete} disabled={isNew}>Delete</button>
+                </div>
+            </div>
         </Form>
     )
 }
@@ -91,7 +99,8 @@ export class EditUser extends Component {
     state = {
         editUser: {},
         loaded: false,
-        error: null
+        error: null,
+        showConfirmDelete: false
     }
 
     componentDidMount = () => {
@@ -137,6 +146,33 @@ export class EditUser extends Component {
         });
     }
 
+    handleConfirmDeleteUser = () => {
+        let id = this.props.match.params.id;
+        if (id === "new") return;
+
+        let toastId = toast("Deleting...", { autoClose: false });
+
+        deleteUser(id).then((r) => {
+            if (r.status === 204) {
+                toast.update(toastId, { type: toast.TYPE.SUCCESS, autoClose: 5000, render: "Done" });
+                this.props.history.push("/users");
+            } else {
+                r.text().then((value) => {
+                    toast.update(toastId, { type: toast.TYPE.ERROR, autoClose: 5000, render: `${value}` });
+                })
+            }
+        })
+    }
+
+    handleFormOnDelete = () => {
+        let id = this.props.match.params.id;
+        if (id === "new") return;
+
+        this.setState({
+            showConfirmDelete: true
+        });
+    }
+
     render() {
         if (this.state.error) {
             toast.error(this.state.error)
@@ -148,7 +184,10 @@ export class EditUser extends Component {
                 <div className="row">
                     <div className="col">
                         {this.state.loaded ?
-                            <EditUserForm className="mt-lg-4" defaultValues={this.state.editUser} onSave={this.handleFormOnSave} />
+                            <EditUserForm
+                                className="mt-lg-4" defaultValues={this.state.editUser} isNew={this.props.match.params.id === "new"}
+                                onSave={this.handleFormOnSave} onDelete={this.handleFormOnDelete}
+                            />
                             :
                             <div className="text-center mt-2">
                                 {
@@ -163,6 +202,25 @@ export class EditUser extends Component {
                         }
                     </div>
                 </div>
+                <Modal show={this.state.showConfirmDelete} onHide={() => this.setState({ showConfirmDelete: false })}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Confirm Delete User</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Body>
+                        <p>
+                            Are you sure you want to delete user
+                            <span className="badge badge-warning">
+                                {this.state && this.state.editUser && this.state.editUser.name}
+                            </span>?
+                        </p>
+                    </Modal.Body>
+
+                    <Modal.Footer>
+                        <button className="btn btn-danger" onClick={this.handleConfirmDeleteUser}>Delete</button>
+                        <button className="btn btn-secondary" onClick={() => this.setState({ showConfirmDelete: false })}>Cancel</button>
+                    </Modal.Footer>
+                </Modal>
             </div >
         )
     }

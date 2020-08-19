@@ -23,3 +23,12 @@ export const saveUser = (userId, user) => {
         })
     }
 }
+
+export const deleteUser = (userId) => {
+    return fetch(apiHost + "/users/" + userId, {
+        method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    })
+}

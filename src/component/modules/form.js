@@ -90,7 +90,7 @@ export function EmailInput(props) {
             }
 
             const re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i; //eslint-disable-line
-            if (!re.test(value)) {
+            if (!re.test(value) && typeof value === "string") {
                 return value + " This is not a valid email"
             }
 
