@@ -1,11 +1,13 @@
 import Home from './component/pages/Home'
 import Login from './component/pages/Login'
 
-import User from './component/pages/User'
+import User from './component/pages/user/User'
 import EditUser from './component/pages/user/EditUser'
 
-import TimeLog from './component/pages/TimeLog'
-import EditTimeLog from './component/pages/EditTimeLog'
+import TimeLog from './component/pages/timeLog/TimeLog'
+import EditTimeLog from './component/pages/timeLog/EditTimeLog'
+
+import Leaderboard from './component/pages/board/Leaderboard'
 
 const navOnly = [
 
@@ -38,6 +40,12 @@ const route = [
         hideOnNav: true
     },
     {
+        path: '/board/leaderboard',
+        exact: true,
+        component: Leaderboard,
+        name: 'Leaderboard'
+    },
+    {
         path: '/users',
         exact: true,
         component: User,
@@ -49,7 +57,7 @@ const route = [
         component: EditUser,
         name: 'Edit User',
         hideOnNav: true
-    }
+    },
 ];
 
 export { navOnly };

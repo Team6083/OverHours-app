@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import Table from '../modules/table'
-import { getUsers } from '../../client/user'
+import Table from '../../modules/table'
+import { getUsers } from '../../../client/user'
 
 export class User extends Component {
 

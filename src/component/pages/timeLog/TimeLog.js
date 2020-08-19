@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import Table from '../modules/table'
-import { getTimeLogs } from '../../client/timeLog'
+import Table from '../../modules/table'
+import { getTimeLogs } from '../../../client/timeLog'
 
 export class TimeLog extends Component {
 

@@ -45,3 +45,5 @@ export const checkoutUser = ({ userName }) => fetch(apiHost + `/timeLog/checkout
         }
         return Promise.resolve();
     })
+
+export const getSeasonIds = () => fetch(apiHost + "/timeLog/seasonIds").then((r) => r.json());

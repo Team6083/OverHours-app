@@ -17,3 +17,11 @@ code {
 .btn:disabled {
   cursor: default;
 }
+
+select.rounded-select {
+  border-radius: .2rem;
+}
+
+select.rounded-select:focus {
+  outline: 0px;
+}

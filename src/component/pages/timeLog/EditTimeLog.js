@@ -1,7 +1,7 @@
 import React, { Component, useMemo, Fragment } from 'react'
 import { withRouter } from 'react-router-dom'
-import { TextInput, DateTimeInput } from '../modules/form'
-import { getTimeLog, saveTimeLog, deleteTimeLog } from '../../client/timeLog'
+import { TextInput, DateTimeInput } from '../../modules/form'
+import { getTimeLog, saveTimeLog, deleteTimeLog } from '../../../client/timeLog'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-form'
 
