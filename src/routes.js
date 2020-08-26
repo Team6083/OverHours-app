@@ -21,7 +21,7 @@ const route = [
         name: 'Home'
     },
     {
-        path: '/auth/login',
+        path: '/login',
         component: Login,
         name: 'Login',
         hideOnNav: true
